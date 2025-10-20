@@ -1,6 +1,6 @@
 import streamlit as st
-from google import genai
-#import google.generativeai as genai
+#from google import genai
+import google.generativeai as genai
 from google.genai import types
 from typing import Optional
 import random
@@ -360,3 +360,4 @@ if prompt := st.chat_input("Ask me about your data..."):
                         
         except Exception as e:
             st.error(f"Error generating response: {str(e)}")
+
