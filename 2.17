@@ -1,0 +1,8 @@
+Channels:
+ - cctbx202112
+ - defaults
+ - conda-forge
+ - anaconda
+Platform: win-64
+Collecting package metadata (repodata.json): ...working... done
+Solving environment: ...working... 
