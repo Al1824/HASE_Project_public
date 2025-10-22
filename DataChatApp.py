@@ -43,12 +43,12 @@ if "agents" not in st.session_state:
 if "last_config_modified" not in st.session_state:
     st.session_state.last_config_modified = 0
 
-# Try to load API key from env file
-env_api_key = load_api_key_from_env(_ENV_FILE_)
-if env_api_key:
-    # Only run this block for Gemini Developer API
-    st.session_state.gemini_api_key = env_api_key
-    client = genai.Client(api_key=env_api_key)
+# # Try to load API key from env file
+# env_api_key = load_api_key_from_env(_ENV_FILE_)
+# if env_api_key:
+#     # Only run this block for Gemini Developer API
+#     st.session_state.gemini_api_key = env_api_key
+#     client = genai.Client(api_key=env_api_key)
    
 
 models = ["models/gemini-1.5-pro-latest",
@@ -87,6 +87,7 @@ with st.sidebar:
     
     if api_key:
        st.session_state.gemini_api_key = api_key
+       client = genai.Client(api_key=api_key)
        st.success("API key configured!")
 
     # Model selection
@@ -360,4 +361,5 @@ if prompt := st.chat_input("Ask me about your data..."):
                         
         except Exception as e:
             st.error(f"Error generating response: {str(e)}")
+
 
