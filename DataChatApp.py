@@ -79,15 +79,15 @@ st.set_page_config(
 with st.sidebar:
     st.header("Configuration 🔧")
     #Add this for a dynamic key, otherwise comment out
-    #api_key = st.text_input(
-    #    "Enter your Gemini API Key",
-    #    type="password",
-    #    help="Get your API key from https://aistudio.google.com/apikey"
-    #)
+    api_key = st.text_input(
+       "Enter your Gemini API Key",
+       type="password",
+       help="Get your API key from https://aistudio.google.com/apikey"
+    )
     
-    #if api_key:
-    #    st.session_state.gemini_api_key = api_key
-    #    st.success("API key configured!")
+    if api_key:
+       st.session_state.gemini_api_key = api_key
+       st.success("API key configured!")
 
     # Model selection
     if st.session_state.gemini_api_key:
