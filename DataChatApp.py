@@ -164,8 +164,8 @@ with st.sidebar:
         st.rerun()
 
 
-    if st.button("📋 View Saved Chats"):
-        st.switch_page("pages/1_Saved_Chats.py")
+    # if st.button("📋 View Saved Chats"):
+    #     st.switch_page("pages/1_Saved_Chats.py")
 
     
     if st.download_button(
