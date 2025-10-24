@@ -51,14 +51,13 @@ if "last_config_modified" not in st.session_state:
 #     client = genai.Client(api_key=env_api_key)
    
 
-models = ["models/gemini-1.5-pro-latest",
-          "models/gemini-1.5-flash",
+models = [#"models/gemini-1.5-pro-latest",
+          #"models/gemini-1.5-flash",
           "models/gemini-2.0-flash",
           "models/gemini-2.0-pro-exp",
-          "models/gemini-2.5-flash",
-          "models/gemini-2.0-pro-exp"
+          "models/gemini-2.5-flash"
+          #"models/gemini-2.0-pro-exp"
           ]
-
 
 DEFAULT_AGENT_PERSONA = f"""You are a helpful AI assistant focused on data analysis and insights. You communicate clearly and professionally while maintaining a friendly tone. You ask clarifying questions when needed and provide detailed explanations for your analysis. To answer questions use the following data: {st.session_state.dataset}. Whenever possible, show a data visualization with an explanation. Use the MATPLOTLIB library to create the visualizations. If you cannot answer the question with the dataset, say so, and provide only a short explanation, with no code."""
 
@@ -79,6 +78,17 @@ st.set_page_config(
 with st.sidebar:
     st.header("Configuration 🔧")
     #Add this for a dynamic key, otherwise comment out
+
+    user_name = st.text_input(
+        "Enter your ID",
+        help="Provide your user ID for chat identification"
+    )
+    
+    if user_name:
+       user = user_name
+       st.success("User has a name!")
+
+
     api_key = st.text_input(
        "Enter your Gemini API Key",
        type="password",
@@ -157,6 +167,15 @@ with st.sidebar:
     if st.button("📋 View Saved Chats"):
         st.switch_page("pages/1_Saved_Chats.py")
 
+    
+    if st.download_button(
+        "⬇️ Download Chat History",
+        data=json.dumps(st.session_state.saved_chats, indent=2),
+        file_name="chat_history.json",
+        mime="application/json"
+    ):
+        st.success("Chat history downloaded!")
+
 # Main chat interface
 st.header("Data Chat Assistant 💬")
 
@@ -218,11 +237,11 @@ selected_schema = next(
 )
 
 
-# Add system prompt if messages empty or if agent changed
-if not st.session_state.messages or (st.session_state.messages and st.session_state.messages[0].get("content") != selected_persona):
-    st.session_state.messages = [
-        {"role": "system", "content": selected_persona}
-    ]
+# # Add system prompt if messages empty or if agent changed #this displays the character persona at the start of the chat
+# if not st.session_state.messages or (st.session_state.messages and st.session_state.messages[0].get("content") != selected_persona):
+#     st.session_state.messages = [
+#         {"role": "system", "content": selected_persona}
+#     ]
 
 
 
@@ -252,10 +271,10 @@ for message in st.session_state.messages:
 # Chat input
 if prompt := st.chat_input("Ask me about your data..."):
     # Add user message to chat history
-    st.session_state.messages.append({"role": "user", "content": prompt})
+    st.session_state.messages.append({"role": user, "content": prompt})
     
     # Display user message
-    with st.chat_message("user"):
+    with st.chat_message(user):
         st.markdown(prompt)
 
     if not st.session_state.gemini_api_key:
