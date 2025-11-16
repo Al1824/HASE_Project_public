@@ -271,7 +271,7 @@ for message in st.session_state.messages:
 # Chat input
 if prompt := st.chat_input("Ask me about your data..."):
     # Add user message to chat history
-    st.session_state.messages.append({"role": user, "content": prompt})
+    st.session_state.messages.append({'timestamp': datetime.now().strftime("%Y-%m-%d_%H-%M-%S"),"role": user, "content": prompt})
     
     # Display user message
     with st.chat_message(user):
@@ -283,7 +283,7 @@ if prompt := st.chat_input("Ask me about your data..."):
         
         with st.chat_message("assistant"):
             st.markdown(messages)
-            st.session_state.messages.append({"role": "assistant", "content": messages})
+            st.session_state.messages.append({'timestamp': datetime.now().strftime("%Y-%m-%d_%H-%M-%S"),"role": "assistant", "content": messages})
     else:
         try:
             #initiate the chat
