@@ -388,7 +388,7 @@ if prompt := st.chat_input("Ask me about your data..."):
                         # st.markdown(response.text)
                         # st.session_state.messages.append({"role": "assistant", "content": response.text})
             
-            if selected_agent == "Default Agent" or"Agent 1":
+            if selected_agent == "Default Agent" or "Agent 1":
                 with st.chat_message("Default Agent"):
                     with st.spinner("Thinking..."):
                         response = chat.send_message(prompt)

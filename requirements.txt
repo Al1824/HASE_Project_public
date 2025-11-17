@@ -4,6 +4,7 @@ google-genai
 google-generativeai
 langchain
 matplotlib
+seaborn
 tqdm
 google-api-python-client
 pandas
