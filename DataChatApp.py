@@ -1,6 +1,6 @@
 import streamlit as st
 from google import genai
-# import google.generativeai as genai
+#import google.generativeai as genai
 from google.genai import types
 from typing import Optional
 import random
@@ -19,6 +19,7 @@ _ENV_FILE_ = os.path.join(os.path.dirname(__file__),"variables.env")
 DATA_PATH = './data/'
 DATA_FILE = 'titanic.csv'
 
+user = "alex"
 
 #### ----- SET-UP AND PRE-AMBLE ----- ####
 
@@ -43,12 +44,12 @@ if "agents" not in st.session_state:
 if "last_config_modified" not in st.session_state:
     st.session_state.last_config_modified = 0
 
-# # Try to load API key from env file
-# env_api_key = load_api_key_from_env(_ENV_FILE_)
-# if env_api_key:
-#     # Only run this block for Gemini Developer API
-#     st.session_state.gemini_api_key = env_api_key
-#     client = genai.Client(api_key=env_api_key)
+# Try to load API key from env file
+env_api_key = load_api_key_from_env(_ENV_FILE_)
+if env_api_key:
+    # Only run this block for Gemini Developer API
+    st.session_state.gemini_api_key = env_api_key
+    client = genai.Client(api_key=env_api_key)
    
 
 models = [#"models/gemini-1.5-pro-latest",
@@ -58,6 +59,7 @@ models = [#"models/gemini-1.5-pro-latest",
           "models/gemini-2.5-flash"
           #"models/gemini-2.0-pro-exp"
           ]
+
 
 DEFAULT_AGENT_PERSONA = f"""You are a helpful AI assistant focused on data analysis and insights. You communicate clearly and professionally while maintaining a friendly tone. You ask clarifying questions when needed and provide detailed explanations for your analysis. To answer questions use the following data: {st.session_state.dataset}. Whenever possible, show a data visualization with an explanation. Use the MATPLOTLIB library to create the visualizations. If you cannot answer the question with the dataset, say so, and provide only a short explanation, with no code."""
 
@@ -76,19 +78,18 @@ st.set_page_config(
 
 # Sidebar for API key configuration
 with st.sidebar:
-    st.header("Configuration 🔧")
-    #Add this for a dynamic key, otherwise comment out
-
-    user_name = st.text_input(
-        "Enter your ID",
-        help="Provide your user ID for chat identification"
-    )
+    st.header("Configuration 🔧")    
     
-    if user_name:
-       user = user_name
-       st.success("User has a name!")
+    # user_name = st.text_input(
+    #     "Enter your ID",
+    #     help="Provide your user ID for chat identification"
+    # )
+    
+    # if user_name:
+    #    user = user_name
+    #    st.success("User has a name!")
 
-
+    # Add this for a dynamic key, otherwise comment out
     api_key = st.text_input(
        "Enter your Gemini API Key",
        type="password",
@@ -97,8 +98,9 @@ with st.sidebar:
     
     if api_key:
        st.session_state.gemini_api_key = api_key
-       client = genai.Client(api_key=api_key)
        st.success("API key configured!")
+
+
 
     # Model selection
     if st.session_state.gemini_api_key:
@@ -116,6 +118,7 @@ with st.sidebar:
     else:
         st.warning("Please enter your API key to use the full features.")
     
+
     
     ## ------ SIDEBAR CHAT OPTIONS ----- ##
     st.header("Chat Options ")
@@ -164,10 +167,9 @@ with st.sidebar:
         st.rerun()
 
 
-    # if st.button("📋 View Saved Chats"):
-    #     st.switch_page("pages/1_Saved_Chats.py")
+    if st.button("📋 View Saved Chats"):
+        st.switch_page("pages/1_Saved_Chats.py")
 
-    
     if st.download_button(
         "⬇️ Download Chat History",
         data=json.dumps(st.session_state.saved_chats, indent=2),
@@ -237,18 +239,18 @@ selected_schema = next(
 )
 
 
-# # Add system prompt if messages empty or if agent changed #this displays the character persona at the start of the chat
-# if not st.session_state.messages or (st.session_state.messages and st.session_state.messages[0].get("content") != selected_persona):
-#     st.session_state.messages = [
-#         {"role": "system", "content": selected_persona}
-#     ]
+# Add system prompt if messages empty or if agent changed #this displays the character persona at the start of the chat
+if not st.session_state.messages or (st.session_state.messages and st.session_state.messages[0].get("content") != selected_persona):
+    st.session_state.messages = [
+        {"role": "system", "content": selected_persona}
+    ]
 
 
 
 # Display chat messages
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
-        if message["role"] == "assistant" and isinstance(message["content"], dict):
+        if isinstance(message["content"], dict):
             # Handle new message format with chart image
             content = message["content"]
             st.markdown(content.get('explanation', ''))
@@ -271,7 +273,7 @@ for message in st.session_state.messages:
 # Chat input
 if prompt := st.chat_input("Ask me about your data..."):
     # Add user message to chat history
-    st.session_state.messages.append({'timestamp': datetime.now().strftime("%Y-%m-%d_%H-%M-%S"),"role": user, "content": prompt})
+    st.session_state.messages.append({"role": user, "content": prompt})
     
     # Display user message
     with st.chat_message(user):
@@ -308,8 +310,8 @@ if prompt := st.chat_input("Ask me about your data..."):
             
             # Generate response -- which is code and visualization
 
-           # if selected_agent == "Default Agent":
-            #    st.markdown("You selcted the Default Agent, which does not support code generation and visualization.")
+            # if selected_agent == "Default Agent":
+            #     st.markdown("You selcted the Default Agent, which does not support code generation and visualization.")
 
             if selected_agent == "Agent 2":
                 with st.chat_message("assistant"):
@@ -322,11 +324,12 @@ if prompt := st.chat_input("Ask me about your data..."):
                             # st.markdown(response.text)
                             #print(response.text)
                             # Execute the code in a safe environment
-                            st.markdown(response_dict["code"])
+                            # st.markdown(response_dict["code"])
                             exec_globals = {}
                             #st.markdown("trying to clean")
                             # Remove any .show() calls from the code as they don't work in Streamlit
-                            cleaned_code = response_dict["code"].replace('.show()', '')
+                            cleaned_code = response_dict['code'].replace('.show()', '')
+                            cleaned_code = cleaned_code.replace('read_csv("groundhog_cleaned.csv")', 'read_csv("./data/groundhog_cleaned.csv")')
                            # cleaned_code = cleaned_code.lstrip()
                             # test=cleaned_code.replace('`', '')
                             # test2 = test.replace('python', '')
@@ -334,7 +337,7 @@ if prompt := st.chat_input("Ask me about your data..."):
                             #st.markdown(exec(test2, exec_globals))
                             # st.markdown(te)
                             #print(test2.type())
-                            # st.markdown(cleaned_code)
+                            st.code(cleaned_code)
                             exec(cleaned_code, exec_globals)
                             st.markdown("executed")
                             print(exec_globals)
@@ -385,7 +388,7 @@ if prompt := st.chat_input("Ask me about your data..."):
                         # st.markdown(response.text)
                         # st.session_state.messages.append({"role": "assistant", "content": response.text})
             
-            if selected_agent == "Default Agent" or "Agent 1":
+            if selected_agent == "Default Agent" or"Agent 1":
                 with st.chat_message("Default Agent"):
                     with st.spinner("Thinking..."):
                         response = chat.send_message(prompt)
@@ -403,7 +406,7 @@ if prompt := st.chat_input("Ask me about your data..."):
                         chart_image = None
                         if response_dict['code'] != "":
                             st.markdown(response_dict['explanation'])
-                            st.code(response_dict['code'])
+                            #st.code(response_dict['code'])
                             try:
                                 # Execute the code in a safe environment
                                 # st.markdown("exec globals")
@@ -411,9 +414,11 @@ if prompt := st.chat_input("Ask me about your data..."):
                                 # st.markdown("trying to clean")
                                 # Remove any .show() calls from the code as they don't work in Streamlit
                                 cleaned_code = response_dict['code'].replace('.show()', '')
+                                cleaned_code = cleaned_code.replace('read_csv("squirrel_cleaned.csv")', 'read_csv("./data/squirrel_cleaned.csv")')
                                 # st.markdown("execute code")
                                 # st.markdown(cleaned_code)
                                 # st.markdown(exec_globals)
+                                st.code(cleaned_code)
                                 exec(cleaned_code, exec_globals)
                                 #exec(cleaned_code, exec_globals)
                                 # st.markdown("executed")
