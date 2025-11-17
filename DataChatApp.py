@@ -80,14 +80,17 @@ st.set_page_config(
 with st.sidebar:
     st.header("Configuration 🔧")    
     
-    # user_name = st.text_input(
-    #     "Enter your ID",
-    #     help="Provide your user ID for chat identification"
-    # )
+
+    user_name = st.text_input(
+        "Enter your ID",
+        help="Provide your user ID for chat identification"
+    )
     
-    # if user_name:
-    #    user = user_name
-    #    st.success("User has a name!")
+    if user_name:
+       user = user_name
+       st.success("User has a name!")
+
+
 
     # Add this for a dynamic key, otherwise comment out
     api_key = st.text_input(
@@ -167,8 +170,8 @@ with st.sidebar:
         st.rerun()
 
 
-    if st.button("📋 View Saved Chats"):
-        st.switch_page("pages/1_Saved_Chats.py")
+    # if st.button("📋 View Saved Chats"):
+    #     st.switch_page("pages/1_Saved_Chats.py")
 
     if st.download_button(
         "⬇️ Download Chat History",
@@ -239,11 +242,11 @@ selected_schema = next(
 )
 
 
-# Add system prompt if messages empty or if agent changed #this displays the character persona at the start of the chat
-if not st.session_state.messages or (st.session_state.messages and st.session_state.messages[0].get("content") != selected_persona):
-    st.session_state.messages = [
-        {"role": "system", "content": selected_persona}
-    ]
+# # Add system prompt if messages empty or if agent changed #this displays the character persona at the start of the chat
+# if not st.session_state.messages or (st.session_state.messages and st.session_state.messages[0].get("content") != selected_persona):
+#     st.session_state.messages = [
+#         {"role": "system", "content": selected_persona}
+#     ]
 
 
 
