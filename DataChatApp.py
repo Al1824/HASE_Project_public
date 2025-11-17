@@ -343,8 +343,8 @@ if prompt := st.chat_input("Ask me about your data..."):
                             #print(test2.type())
                             st.code(cleaned_code)
                             exec(cleaned_code, exec_globals)
-                            st.markdown("executed")
-                            print(exec_globals)
+                            # st.markdown("executed")
+                            # print(exec_globals)
                             # Check if a matplotlib figure was created
                             if 'plt' in exec_globals and plt.get_fignums():
                                 # st.markdown("found plt")
@@ -377,7 +377,7 @@ if prompt := st.chat_input("Ask me about your data..."):
                                 
                                 # Clear the figure to prevent memory issues
                                 plt.close(fig)
-                                st.code(response_dict['code'])
+                                # st.code(response_dict['code'])
                                     
                         except Exception as e:
                             st.markdown(response_dict['explanation'])
@@ -409,7 +409,7 @@ if prompt := st.chat_input("Ask me about your data..."):
                         # Execute the code and display chart if code exists
                         chart_image = None
                         if response_dict['code'] != "":
-                            st.markdown(response_dict['explanation'])
+                            
                             #st.code(response_dict['code'])
                             try:
                                 # Execute the code in a safe environment
@@ -419,11 +419,13 @@ if prompt := st.chat_input("Ask me about your data..."):
                                 # Remove any .show() calls from the code as they don't work in Streamlit
                                 cleaned_code = response_dict['code'].replace('.show()', '')
                                 cleaned_code = cleaned_code.replace('read_csv("squirrel_cleaned.csv")', 'read_csv("./data/squirrel_cleaned.csv")')
+                                cleaned_code = cleaned_code.lower()
                                 # st.markdown("execute code")
                                 # st.markdown(cleaned_code)
                                 # st.markdown(exec_globals)
                                 st.code(cleaned_code)
                                 exec(cleaned_code, exec_globals)
+                                st.markdown(response_dict['explanation'])
                                 #exec(cleaned_code, exec_globals)
                                 # st.markdown("executed")
                                 
