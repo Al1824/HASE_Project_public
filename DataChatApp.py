@@ -308,10 +308,10 @@ if prompt := st.chat_input("Ask me about your data..."):
             
             # Generate response -- which is code and visualization
 
-            if selected_agent == "Default Agent":
-                st.markdown("You selcted the Default Agent, which does not support code generation and visualization.")
+           # if selected_agent == "Default Agent":
+            #    st.markdown("You selcted the Default Agent, which does not support code generation and visualization.")
 
-            if selected_agent == "Agent 4":
+            if selected_agent == "Agent 2":
                 with st.chat_message("assistant"):
                     with st.spinner("Thinking..."):
                         response = chat.send_message(prompt)
@@ -385,7 +385,7 @@ if prompt := st.chat_input("Ask me about your data..."):
                         # st.markdown(response.text)
                         # st.session_state.messages.append({"role": "assistant", "content": response.text})
             
-            if selected_agent == "Default Agent":# or "Agent 4":
+            if selected_agent == "Default Agent" or "Agent 1":
                 with st.chat_message("Default Agent"):
                     with st.spinner("Thinking..."):
                         response = chat.send_message(prompt)
