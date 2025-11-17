@@ -19,7 +19,7 @@ _ENV_FILE_ = os.path.join(os.path.dirname(__file__),"variables.env")
 DATA_PATH = './data/'
 DATA_FILE = 'titanic.csv'
 
-user = "alex"
+# user = "alex"
 
 #### ----- SET-UP AND PRE-AMBLE ----- ####
 
@@ -101,6 +101,7 @@ with st.sidebar:
     
     if api_key:
        st.session_state.gemini_api_key = api_key
+       client = genai.Client(api_key=api_key)
        st.success("API key configured!")
 
 
